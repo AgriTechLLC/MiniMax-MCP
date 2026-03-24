@@ -90,16 +90,20 @@ def text_to_audio(
     if not text:
         raise MinimaxRequestError("Text is required.")
 
+    voice_setting = {
+        "voice_id": voice_id,
+        "speed": speed,
+        "vol": vol,
+        "pitch": pitch,
+    }
+    # Only add emotion for models that support it (speech-01 and speech-02 do not)
+    if model not in ("speech-01", "speech-02"):
+        voice_setting["emotion"] = emotion
+
     payload = {
         "model": model,
         "text": text,
-        "voice_setting": {
-            "voice_id": voice_id,
-            "speed": speed,
-            "vol": vol,
-            "pitch": pitch,
-            "emotion": emotion
-        },
+        "voice_setting": voice_setting,
         "audio_setting": {
             "sample_rate": sample_rate,
             "bitrate": bitrate,
